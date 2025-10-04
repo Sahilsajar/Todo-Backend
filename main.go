@@ -1,40 +1,20 @@
 package main
 
+/*In Go, you can’t just import with "Todo/data" unless your module name is really Todo.
+
+Imports must start with your module name (defined in go.mod), not just a folder name.*/
 import (
+	"Todo/data"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
-/*
-	type todo struct {
-		id        int
-		task      string
-		completed bool
-	}
+type todo = data.Todo
 
-if use small letter then it will become private and c.json will not able to export it and api response will be empty.
-*/
-/*
-Without json tag it will also work but mainly in DB camelcase or snakecase so that is why  we explicitly provide names for it.
-*/
+var todos = data.Todos
 
-/*
-If we dont put binding and wrong json or no json is provided still it will add with default values.
-*/
-type todo struct {
-	Id        int    `json:"id" binding:"required"`
-	Task      string `json:"task" binding:"required"`
-	Completed bool   `json:"completed"`
-}
-
-var todos = []todo{
-	{Id: 1,
-		Task:      "go",
-		Completed: false},
-}
-
-func getTodos(c *gin.Context) {
+func gettodos(c *gin.Context) {
 	c.JSON(200, todos)
 }
 
@@ -66,7 +46,7 @@ func markComplete(c *gin.Context) {
 
 func main() {
 	r := gin.Default()
-	r.GET("/getTodos", getTodos)
+	r.GET("/gettodos", gettodos)
 	r.POST("/addTodo", addTodo)
 	r.PATCH("/over/:id", markComplete)
 
